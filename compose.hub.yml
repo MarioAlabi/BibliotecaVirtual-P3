@@ -10,24 +10,26 @@ x-api-env: &id001
   Demo__EnableFailureSimulation: 'false'
 services:
   migrate:
-    image: marioalabi/biblioteca-api:${IMAGE_TAG:-1.1.0}
+    image: marioalabi/biblioteca-api:${IMAGE_TAG:-3.0.0}
     environment: *id001
     volumes:
     - api-keys:/keys
+    - api-uploads:/app/wwwroot/uploads
     command:
     - --migrate
     restart: 'no'
   api:
-    image: marioalabi/biblioteca-api:${IMAGE_TAG:-1.1.0}
+    image: marioalabi/biblioteca-api:${IMAGE_TAG:-3.0.0}
     environment: *id001
     volumes:
     - api-keys:/keys
+    - api-uploads:/app/wwwroot/uploads
     depends_on:
       migrate:
         condition: service_completed_successfully
     restart: unless-stopped
   web:
-    image: marioalabi/biblioteca-web:${WEB_IMAGE_TAG:-1.1.1}
+    image: marioalabi/biblioteca-web:${WEB_IMAGE_TAG:-3.0.0}
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Api__PublicUrl: https://${BACKEND_DOMAIN}
@@ -54,5 +56,6 @@ services:
     restart: unless-stopped
 volumes:
   api-keys: null
+  api-uploads: null
   caddy-data: null
   caddy-config: null

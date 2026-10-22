@@ -2,29 +2,30 @@
 # Conserva los nombres de servicio, puertos y volumen del stack existente.
 services:
   backend:
-    image: marioalabi/biblioteca-api:1.1.0
+    image: marioalabi/biblioteca-api:3.0.0
     restart: unless-stopped
     ports:
       - 5081:8080
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-      ConnectionStrings__Library: "Server=${DB_HOST:-100.64.0.1};Port=${DB_PORT:-3306};Database=${DB_NAME:-biblioteca_virtual};User=${DB_USER:-mvilleda};Password=${DB_PASSWORD:?Configura DB_PASSWORD};SslMode=Preferred;"
+      ConnectionStrings__Library: "Server=${DB_HOST:-192.168.110.200};Port=${DB_PORT:-3306};Database=${DB_NAME:-biblioteca_virtual_p3};User=${DB_USER:-mvilleda};Password=${DB_PASSWORD:?Configura DB_PASSWORD};SslMode=Preferred;"
       Cors__AllowedOrigins__0: https://biblioteca.marioalabi.com
       DataProtection__KeysPath: /keys
       ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
     volumes:
       - sesiones:/keys
+      - uploads:/app/wwwroot/uploads
     entrypoint: ["/bin/sh", "-c"]
     command: ["dotnet Biblioteca.Api.dll --migrate && exec dotnet Biblioteca.Api.dll"]
   frontend:
-    image: marioalabi/biblioteca-web:1.1.1
+    image: marioalabi/biblioteca-web:3.0.0
     restart: unless-stopped
     ports:
       - 5080:8080
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-      Api__PublicUrl: https://biblioteca-api.marioalabi.com
     depends_on:
       - backend
 volumes:
   sesiones: null
+  uploads: null
