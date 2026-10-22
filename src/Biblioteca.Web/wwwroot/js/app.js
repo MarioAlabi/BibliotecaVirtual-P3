@@ -1,6 +1,22 @@
 "use strict";
 
-const DEFAULT_API = "http://localhost:5081";
+function getDefaultApi() {
+  const meta = document.querySelector('meta[name="api-url"]')?.content;
+  if (meta) return meta.replace(/\/$/, "");
+  const host = window.location.hostname;
+  if (host.includes("biblioteca.marioalabi.com")) {
+    return "https://biblioteca-api.marioalabi.com";
+  }
+  if (window.location.port === "5080") {
+    return `${window.location.protocol}//${host}:5081`;
+  }
+  if (host === "localhost" || host === "127.0.0.1") {
+    return `http://${host}:5081`;
+  }
+  return "http://localhost:5081";
+}
+
+const DEFAULT_API = getDefaultApi();
 let API = localStorage.getItem("biblioteca_api_url") || DEFAULT_API;
 let token = localStorage.getItem("biblioteca_jwt") || "";
 let user = JSON.parse(localStorage.getItem("biblioteca_user") || "null");
