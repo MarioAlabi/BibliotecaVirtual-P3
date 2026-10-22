@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Biblioteca Virtual · UNICAES (Periodo 3)</title>
+  <link rel="stylesheet" href="/css/site.css">
+  <style>
+    .cover-img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
+    .badge.warning { background: #fef3c7; color: #92400e; }
+    .badge.danger { background: #fee2e2; color: #991b1b; }
+    .tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid var(--line); padding-bottom: 10px; }
+    .tab-btn { background: transparent; border: 0; padding: 8px 16px; border-radius: 6px; font-weight: 500; color: var(--muted); cursor: pointer; }
+    .tab-btn.active { background: #edf4ee; color: var(--green); font-weight: 600; }
+    .card-actions { display: flex; gap: 8px; margin-top: 10px; }
+    .pill { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; background: #e5e7eb; color: #374151; }
+    .api-badge { background: #ecfdf5; color: #065f46; font-size: 10px; padding: 3px 8px; border-radius: 4px; border: 1px solid #a7f3d0; }
+  </style>
+  <script src="/js/app.js" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="#inicio">
+      <span class="brand-icon">B<span>v</span></span>
+      <span>Biblioteca<span class="brand-sub">REST API · UNICAES</span></span>
+    </a>
+    <p class="nav-label">SISTEMA BIBLIOTECA P3</p>
+    <nav aria-label="Navegación principal">
+      <a href="#inicio" data-nav="inicio"><span>⌂</span> Inicio</a>
+      <a href="#catalogo" data-nav="catalogo"><span>📚</span> Catálogo de libros</a>
+      <a href="#autores" data-nav="autores"><span>✍️</span> Autores</a>
+      <a href="#categorias" data-nav="categorias"><span>🏷️</span> Categorías</a>
+      <a href="#lectores" data-nav="lectores" hidden><span>👥</span> Lectores</a>
+      <a href="#prestamos" data-nav="prestamos" hidden><span>⇄</span> Préstamos</a>
+      <a href="#usuarios" data-nav="usuarios" hidden><span>⚙️</span> Usuarios</a>
+      <a href="#cuenta" data-nav="cuenta" hidden><span>◎</span> Mi cuenta</a>
+    </nav>
+    <div class="sidebar-note">
+      <span class="dot"></span> <strong>Periodo 3</strong>
+      <p>Arquitectura REST desacoplada, JWT y MariaDB.</p>
+    </div>
+    <div class="sidebar-footer">
+      <a href="http://localhost:5081/swagger" target="_blank" class="text-link" style="font-size:11px;">📖 Abrir Swagger UI ↗</a>
+      <br><br>
+      DESARROLLO MULTIPLATAFORMA<br>
+      <strong>Proyecto Académico · 2026</strong>
+    </div>
+  </aside>
+
+  <div class="shell">
+    <header>
+      <div class="breadcrumb">
+        Biblioteca Virtual <span>/</span> <strong id="page-label">Inicio</strong>
+      </div>
+      <div style="display:flex;align-items:center;gap:15px;">
+        <span id="api-status-badge" class="api-badge">API: Conectando…</span>
+        <div id="auth-actions">
+          <a class="button secondary small" href="#login">Iniciar sesión <span>↗</span></a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <div class="empty">Cargando biblioteca…</div>
+    </main>
+
+    <footer>
+      <span>Biblioteca Virtual · API REST .NET 10</span>
+      <span>Cliente Web Independiente (Desacoplado)</span>
+    </footer>
+  </div>
+
+  <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+
+  <dialog id="modal">
+    <div class="modal-head">
+      <h2 id="modal-title"></h2>
+      <button class="icon-button" id="close-modal" aria-label="Cerrar">×</button>
+    </div>
+    <div id="modal-content"></div>
+  </dialog>
+</body>
+</html>

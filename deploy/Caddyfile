@@ -1,0 +1,10 @@
+{$FRONTEND_DOMAIN} {
+ encode zstd gzip
+ reverse_proxy web:8080
+ header Strict-Transport-Security "max-age=31536000"
+}
+{$BACKEND_DOMAIN} {
+ encode zstd gzip
+ reverse_proxy api:8080
+ header Strict-Transport-Security "max-age=31536000"
+}

@@ -1,0 +1,42 @@
+name: biblioteca-virtual
+x-api-env: &api-env
+  ASPNETCORE_ENVIRONMENT: Development
+  ConnectionStrings__Library: "Server=${DB_HOST};Port=${DB_PORT:-3306};Database=${DB_NAME};User=${DB_USER};Password=${DB_PASSWORD};SslMode=Preferred;"
+  Cors__AllowedOrigins__0: http://localhost:5080
+  DataProtection__KeysPath: /keys
+  Demo__EnableFailureSimulation: "false"
+services:
+  migrate:
+    image: biblioteca-api:local
+    build:
+      context: .
+      dockerfile: src/Biblioteca.Api/Dockerfile
+    environment: *api-env
+    command: ["--migrate"]
+    volumes: ["api-keys:/keys"]
+    restart: "no"
+  api:
+    image: biblioteca-api:local
+    build:
+      context: .
+      dockerfile: src/Biblioteca.Api/Dockerfile
+    environment: *api-env
+    ports: ["127.0.0.1:5081:8080"]
+    volumes: ["api-keys:/keys", "api-uploads:/app/wwwroot/uploads"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+  web:
+    image: biblioteca-web:local
+    build:
+      context: .
+      dockerfile: src/Biblioteca.Web/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    ports: ["127.0.0.1:5080:8080"]
+    depends_on: [api]
+    restart: unless-stopped
+volumes:
+  api-keys:
+  api-uploads:

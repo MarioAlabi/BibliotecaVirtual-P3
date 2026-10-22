@@ -1,0 +1,12 @@
+# Opción para Linux si la red de construcción no puede resolver NuGet.
+# Solo afecta a la construcción: los servicios conservan su red privada de ejecución.
+services:
+  migrate:
+    build:
+      network: host
+  api:
+    build:
+      network: host
+  web:
+    build:
+      network: host

@@ -1,0 +1,57 @@
+name: biblioteca-virtual-prod
+x-api-env: &api-env
+  ASPNETCORE_ENVIRONMENT: Production
+  ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
+  ConnectionStrings__Library: "Server=${DB_HOST};Port=${DB_PORT:-3306};Database=${DB_NAME};User=${DB_USER};Password=${DB_PASSWORD};SslMode=Preferred;"
+  Cors__AllowedOrigins__0: "https://${FRONTEND_DOMAIN}"
+  AllowedHosts: "${BACKEND_DOMAIN};api"
+  DataProtection__KeysPath: /keys
+  Demo__EnableFailureSimulation: "false"
+services:
+  migrate:
+    image: biblioteca-api:production
+    build:
+      context: .
+      dockerfile: src/Biblioteca.Api/Dockerfile
+    environment: *api-env
+    volumes: ["api-keys:/keys"]
+    command: ["--migrate"]
+    restart: "no"
+  api:
+    image: biblioteca-api:production
+    build:
+      context: .
+      dockerfile: src/Biblioteca.Api/Dockerfile
+    environment: *api-env
+    volumes: ["api-keys:/keys"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+  web:
+    image: biblioteca-web:production
+    build:
+      context: .
+      dockerfile: src/Biblioteca.Web/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      Api__PublicUrl: "https://${BACKEND_DOMAIN}"
+      AllowedHosts: "${FRONTEND_DOMAIN};web"
+    depends_on: [api]
+    restart: unless-stopped
+  proxy:
+    image: caddy:2-alpine
+    ports: ["80:80", "443:443", "443:443/udp"]
+    environment:
+      FRONTEND_DOMAIN: "${FRONTEND_DOMAIN}"
+      BACKEND_DOMAIN: "${BACKEND_DOMAIN}"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on: [api, web]
+    restart: unless-stopped
+volumes:
+  api-keys:
+  caddy-data:
+  caddy-config:

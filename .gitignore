@@ -1,0 +1,12 @@
+**/bin/
+**/obj/
+.env
+.env.*
+!.env.example
+*.user
+.vs/
+.idea/
+work/
+**/appsettings.Local.json
+*.log
+**/wwwroot/uploads/*

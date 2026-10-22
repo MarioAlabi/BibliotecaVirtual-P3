@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Biblioteca.Api/Biblioteca.Api.csproj" />
+    <Project Path="src/Biblioteca.Web/Biblioteca.Web.csproj" />
+  </Folder>
+</Solution>
